@@ -1,4 +1,4 @@
-package lur
+package lru
 
 import "container/list"
 
