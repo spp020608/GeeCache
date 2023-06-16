@@ -83,6 +83,9 @@ func (g *Group) Get(key string) (ByteView, error) {
 	return g.load(key)
 }
 
+// load 调用 getLocally（分布式场景下会调用 getFromPeer 从其他节点获取）
+// getLocally 调用用户回调函数 g.getter.Get() 获取源数据
+// 并且将源数据添加到缓存 mainCache 中（通过 populateCache 方法）
 func (g *Group) load(key string) (value ByteView, err error) {
 	return g.getLocally(key)
 }
