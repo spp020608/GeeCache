@@ -5,10 +5,21 @@ import (
 	"sync"
 )
 
+type IMutexCache interface {
+	add(key string, value ByteView)
+	get(key string) (value ByteView, ok bool)
+}
+
 type cache struct {
 	mu         sync.Mutex
 	lru        *lru.Cache
 	cacheBytes int64
+}
+
+func NewMutexCache(cacheBytes int64) IMutexCache {
+	return &cache{
+		cacheBytes: cacheBytes,
+	}
 }
 
 // 在 add 方法中，判断了 c.lru 是否为 nil，

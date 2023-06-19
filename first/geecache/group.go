@@ -6,6 +6,11 @@ import (
 	"sync"
 )
 
+type IGroup interface {
+	Get(key string) (ByteView, error)
+	RegisterPeers(peers PeerPicker)
+}
+
 // A Group is a cache namespace and associated data loaded spread over
 // 一个 Group 可以认为是一个缓存的命名空间
 // 每个 Group 拥有一个唯一的名称 name。
@@ -130,7 +135,7 @@ func (g *Group) getLocally(key string) (ByteView, error) {
 
 // 新增 getFromPeer() 方法，
 // 使用实现了 PeerGetter 接口的 httpGetter 从访问远程节点，获取缓存值。
-func (g *Group) getFromPeer(peer PeerGetter, key string) (ByteView, error) {
+func (g *Group) getFromPeer(peer PeerClient, key string) (ByteView, error) {
 	bytes, err := peer.Get(g.name, key)
 	if err != nil {
 		return ByteView{}, err
